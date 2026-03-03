@@ -13,7 +13,7 @@ def main():
     
     args = parser.parse_args()
     
-    target_url = 'https://blueprintue.com/type/blueprint/'
+    target_url = os.getenv('TARGET_URL', 'https://blueprintue.com/type/blueprint/')
     
     # Check for API Key
     if not os.getenv("OPENAI_API_KEY"):

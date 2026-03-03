@@ -43,6 +43,7 @@ A modular Python-based scraper that extracts Unreal Engine blueprint code from [
 |----------|-------------|---------|
 | `OPENAI_API_KEY` | Your OpenAI API key | **Required** |
 | `OPENAI_MODEL` | OpenAI model identifier | `gpt-4o-mini` |
+| `TARGET_URL` | The URL to scrape | `https://blueprintue.com/type/blueprint/` |
 | `MAX_CONCURRENCY`| Number of blueprints to process in parallel | `5` |
 | `DEBUG` | Enable debug logging | `True` |
 
