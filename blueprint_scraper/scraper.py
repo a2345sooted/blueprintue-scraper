@@ -14,7 +14,7 @@ class Scraper:
         Returns a list of dictionaries with 'title', 'href', and the 'next_page_url'.
         """
         try:
-            response = requests.get(url, headers=self.headers)
+            response = requests.get(url, headers=self.headers, timeout=10)
             response.raise_for_status()
             
             soup = BeautifulSoup(response.content, 'html.parser')
@@ -54,7 +54,7 @@ class Scraper:
         Scrapes a detail page for the blueprint code.
         """
         try:
-            response = requests.get(url, headers=self.headers)
+            response = requests.get(url, headers=self.headers, timeout=15)
             response.raise_for_status()
             detail_soup = BeautifulSoup(response.content, 'html.parser')
             

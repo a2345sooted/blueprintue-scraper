@@ -13,7 +13,8 @@ def summarize_blueprint_node(state: AgentState):
     Summarization node.
     """
     model_name = os.getenv("OPENAI_MODEL", "gpt-4o-mini")
-    llm = ChatOpenAI(model=model_name)
+    # Set a timeout for the LLM call to avoid indefinite hangs
+    llm = ChatOpenAI(model=model_name, timeout=30)
     
     system_prompt = (
         "You are an expert in Unreal Engine blueprints. "
@@ -29,8 +30,14 @@ def summarize_blueprint_node(state: AgentState):
         HumanMessage(content=f"Please analyze and summarize this Unreal Engine blueprint code:\n\n{state['blueprint_code']}")
     ]
     
-    response = llm.invoke(messages)
-    return {"summary": response.content}
+    try:
+        response = llm.invoke(messages)
+        return {"summary": response.content}
+    except Exception as e:
+        error_str = str(e)
+        if "context_length_exceeded" in error_str or "maximum context length" in error_str:
+            return {"summary": "Error: The blueprint code is too large for the model's context length limit and has been skipped."}
+        raise e
 
 def create_summarizer_agent():
     """

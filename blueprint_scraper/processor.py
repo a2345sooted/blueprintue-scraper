@@ -28,6 +28,10 @@ def process_single_blueprint(bp_info, scraper, agent, output_handler, base_url):
         # Agent invoke is sync, but ThreadPoolExecutor handles it in parallel
         result = agent.invoke({"blueprint_code": code})
         summary = result.get("summary", "No summary generated.")
+        if summary.startswith("Error: The blueprint code is too large"):
+            # If it's too large, we still save the metadata and code, but the summary will indicate it was skipped.
+            print(f"   {title}: blueprint too large for model context. Skipping summary.")
+            pass
     except Exception as agent_err:
         return f"   {title}: error generating summary: {agent_err}"
     
@@ -93,23 +97,29 @@ def run_scraper(url, limit=None, page_limit=None):
                     for bp in blueprints_to_process
                 }
                 
-                for future in as_completed(futures):
-                    bp_obj = futures[future]
-                    try:
-                        result = future.result()
-                        if isinstance(result, dict):
-                            count += 1
-                            # Mark as processed in the output handler and persist it
-                            output_handler.mark_as_processed(bp_obj['id'])
-                            
-                            print("-" * 40)
-                            print(f"[{count}] TITLE: {result['title']}")
-                            print(f"SAVED TO: {result['save_path']}")
-                            print("-" * 40)
-                        else:
-                            print(result)
-                    except Exception as e:
-                        print(f"   Error processing {bp_obj.get('title', 'Unknown')}: {e}")
+                try:
+                    for future in as_completed(futures):
+                        bp_obj = futures[future]
+                        try:
+                            result = future.result()
+                            if isinstance(result, dict):
+                                count += 1
+                                # Mark as processed in the output handler and persist it
+                                output_handler.mark_as_processed(bp_obj['id'])
+                                
+                                print("-" * 40)
+                                print(f"[{count}] TITLE: {result['title']}")
+                                print(f"SAVED TO: {result['save_path']}")
+                                print("-" * 40)
+                            else:
+                                print(result)
+                        except Exception as e:
+                            print(f"   Error processing {bp_obj.get('title', 'Unknown')}: {e}")
+                except KeyboardInterrupt:
+                    print("\nScraping interrupted by user. Stopping all tasks...")
+                    executor.shutdown(wait=False, cancel_futures=True)
+                    print("All tasks cancelled. Exiting.")
+                    return
         
         pages_scraped += 1
         current_page_url = next_page_url
