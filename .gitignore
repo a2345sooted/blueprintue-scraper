@@ -149,7 +149,7 @@ cython_debug/
 
 # PyCharm
 #  JetBrains specific template is usually better to be ignored separately
-#  .idea/
+.idea/
 
 # VS Code
 .vscode/
