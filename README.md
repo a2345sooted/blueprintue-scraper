@@ -8,7 +8,6 @@ A modular Python-based scraper that extracts Unreal Engine blueprint code from [
 - **AI-Powered Summarization**: Uses OpenAI's advanced models (via LangChain/LangGraph) to provide:
   - **High-Level Summary**: Quick overview for UE developers.
   - **Detailed Breakdown**: Step-by-step technical analysis of nodes and logic flow.
-- **Checker/Repairer Pattern**: The agent automatically reviews its own summaries for accuracy and refines them if necessary.
 - **Parallel Processing**: Efficiently processes blueprints in configurable batches.
 - **Resume Capability**: Tracks processed blueprints to skip already scraped content if the script is restarted.
 - **Modular Architecture**: Clean separation between scraping, processing, and AI logic.
@@ -43,7 +42,7 @@ A modular Python-based scraper that extracts Unreal Engine blueprint code from [
 | Variable | Description | Default |
 |----------|-------------|---------|
 | `OPENAI_API_KEY` | Your OpenAI API key | **Required** |
-| `OPENAI_MODEL` | OpenAI model identifier | `gpt-5.2-2025-12-11` |
+| `OPENAI_MODEL` | OpenAI model identifier | `gpt-4o-mini` |
 | `MAX_CONCURRENCY`| Number of blueprints to process in parallel | `5` |
 | `DEBUG` | Enable debug logging | `True` |
 

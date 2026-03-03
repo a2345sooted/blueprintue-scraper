@@ -81,33 +81,35 @@ def run_scraper(url, limit=None, page_limit=None):
             if limit is not None and (count + len(blueprints_to_process)) >= limit:
                 break
             
-        # Process in batches of 'batch_size'
-        for i in range(0, len(blueprints_to_process), batch_size):
-            batch = blueprints_to_process[i:i + batch_size]
-            print(f"\nProcessing batch of {len(batch)} blueprints:")
-            for bp in batch:
+        # Process blueprints from the current page in parallel
+        if blueprints_to_process:
+            print(f"\nProcessing {len(blueprints_to_process)} blueprints in parallel (Max Concurrency: {batch_size}):")
+            for bp in blueprints_to_process:
                 print(f" - {bp['title']} (ID: {bp['id']})")
             
             with ThreadPoolExecutor(max_workers=batch_size) as executor:
                 futures = {
                     executor.submit(process_single_blueprint, bp, scraper, agent, output_handler, url): bp 
-                    for bp in batch
+                    for bp in blueprints_to_process
                 }
                 
                 for future in as_completed(futures):
-                    result = future.result()
-                    if isinstance(result, dict):
-                        count += 1
-                        # Mark as processed in the output handler and persist it
-                        bp_obj = futures[future]
-                        output_handler.mark_as_processed(bp_obj['id'])
-                        
-                        print("-" * 40)
-                        print(f"[{count}] TITLE: {result['title']}")
-                        print(f"SAVED TO: {result['save_path']}")
-                        print("-" * 40)
-                    else:
-                        print(result)
+                    bp_obj = futures[future]
+                    try:
+                        result = future.result()
+                        if isinstance(result, dict):
+                            count += 1
+                            # Mark as processed in the output handler and persist it
+                            output_handler.mark_as_processed(bp_obj['id'])
+                            
+                            print("-" * 40)
+                            print(f"[{count}] TITLE: {result['title']}")
+                            print(f"SAVED TO: {result['save_path']}")
+                            print("-" * 40)
+                        else:
+                            print(result)
+                    except Exception as e:
+                        print(f"   Error processing {bp_obj.get('title', 'Unknown')}: {e}")
         
         pages_scraped += 1
         current_page_url = next_page_url
