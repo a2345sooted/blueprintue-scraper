@@ -25,12 +25,25 @@ A modular Python-based scraper that extracts Unreal Engine blueprint code from [
    cd blueprintue-scraper
    ```
 
-2. **Install dependencies**:
+2. **Set up a Virtual Environment (Recommended)**:
+   It's best practice to use a virtual environment to manage dependencies:
    ```bash
-   pip install -r requirements.txt
+   # Create a virtual environment
+   python3 -m venv venv
+
+   # Activate the virtual environment
+   # On macOS/Linux:
+   source venv/bin/activate
+   # On Windows:
+   venv\Scripts\activate
    ```
 
-3. **Configure Environment Variables**:
+3. **Install dependencies**:
+   ```bash
+   python3 -m pip install -r requirements.txt
+   ```
+
+4. **Configure Environment Variables**:
    Copy the example environment file and fill in your details:
    ```bash
    cp .env.example .env
@@ -49,7 +62,7 @@ A modular Python-based scraper that extracts Unreal Engine blueprint code from [
 
 ## Usage
 
-Run the scraper using the entry point:
+Ensure your virtual environment is activated, then run the scraper using `python3`:
 
 ```bash
 # Scrape the first 5 blueprints (default)
