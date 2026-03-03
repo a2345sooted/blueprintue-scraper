@@ -14,7 +14,8 @@ def summarize_blueprint_node(state: AgentState):
     """
     Initial summarization node.
     """
-    llm = ChatOpenAI(model="gpt-5.2-2025-12-11")
+    model_name = os.getenv("OPENAI_MODEL", "gpt-5.2-2025-12-11")
+    llm = ChatOpenAI(model=model_name)
     
     system_prompt = (
         "You are an expert in Unreal Engine blueprints. "
@@ -37,7 +38,8 @@ def check_summary_node(state: AgentState):
     """
     Checks the summary for accuracy and completeness.
     """
-    llm = ChatOpenAI(model="gpt-5.2-2025-12-11")
+    model_name = os.getenv("OPENAI_MODEL", "gpt-5.2-2025-12-11")
+    llm = ChatOpenAI(model=model_name)
     
     check_prompt = (
         "You are a quality assurance expert for Unreal Engine blueprint documentation. "
@@ -60,7 +62,8 @@ def repair_summary_node(state: AgentState):
     """
     Repairs the summary based on feedback.
     """
-    llm = ChatOpenAI(model="gpt-5.2-2025-12-11")
+    model_name = os.getenv("OPENAI_MODEL", "gpt-5.2-2025-12-11")
+    llm = ChatOpenAI(model=model_name)
     
     repair_prompt = (
         "You are an expert in Unreal Engine blueprints. "
