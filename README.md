@@ -22,7 +22,7 @@ A modular Python-based scraper that extracts Unreal Engine blueprint code from [
 1. **Clone the repository**:
    ```bash
    git clone <repository-url>
-   cd blueprint-scraper
+   cd blueprintue-scraper
    ```
 
 2. **Install dependencies**:
