@@ -1,4 +1,5 @@
 python-dotenv
+dotenv
 requests
 beautifulsoup4
 langchain
